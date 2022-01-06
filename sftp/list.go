@@ -3,7 +3,10 @@ package sftp
 import (
 	"fmt"
 	"os"
+	"strings"
+	"time"
 
+	"github.com/lguazo/sftp_client/email"
 	"github.com/pkg/sftp"
 )
 
@@ -20,12 +23,11 @@ func ListFiles(sc sftp.Client, remoteDir string) (err error) {
 		var name, modTime, size string
 
 		name = f.Name()
-		// modTime = f.ModTime().Format("2006-01-02 15:04:05")
 		modTime = f.ModTime().Format("01-02-2006 15:04:05")
 		size = fmt.Sprintf("%12d", f.Size())
 
 		if f.Name() == "file.txt" {
-			fmt.Printf("File found itTTTT %s", f.Name())
+			fmt.Printf("File %s found", f.Name())
 		}
 
 		if f.IsDir() {
@@ -33,6 +35,7 @@ func ListFiles(sc sftp.Client, remoteDir string) (err error) {
 			modTime = ""
 			size = "DIR"
 		}
+
 		// Output each file name and size in bytes
 		fmt.Fprintf(os.Stdout, "%19s %12s %s\n", modTime, size, name)
 	}
@@ -47,10 +50,40 @@ func CheckSftpFile(sc sftp.Client, remoteDir string) (err error) {
 		return
 	}
 
+	var fileName, fileDate string
+	var fileState bool
+
+	fileName = os.Getenv("FILE_NAME")
+	fileDate = os.Getenv("FILE_DATE")
+
+	currentTime := time.Now().Format("01/02/2006")
 	for _, f := range files {
-		if f.Name() == "lic_status.dat" {
-			fmt.Printf("File %s found", f.Name())
+		var modTime string
+
+		modTime = f.ModTime().Format("01/02/2006")
+
+		fileWhen := strings.ToLower(os.Getenv("FILE_WHEN"))
+
+		if fileWhen == "now" {
+			if f.Name() == fileName && modTime == currentTime {
+				fmt.Printf("File %s found", f.Name())
+				fileState = true
+				break
+			}
+		} else if fileWhen == "custom" {
+			if f.Name() == fileName && modTime == fileDate {
+				fmt.Printf("File %s found", f.Name())
+				fileState = true
+				break
+			} else {
+				fileState = false
+			}
 		}
+	}
+
+	if fileState == false {
+		email.SendEmail()
+		fmt.Println("Test")
 	}
 
 	return

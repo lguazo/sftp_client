@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
 )
 
-func Conn() {
+func Conn() *ssh.Client {
 	// Get SFTP URL, Port, User & Password from environment
 	host := os.Getenv("SFTP_URL")
 	user := os.Getenv("SFTP_USER")
@@ -48,18 +47,21 @@ func Conn() {
 		os.Exit(1)
 	}
 
-	defer conn.Close()
+	// defer conn.Close()
+
+	return conn
 
 	// Create new SFTP client
-	sc, err := sftp.NewClient(conn)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to start SFTP subsystem: %v\n", err)
-		os.Exit(1)
-	} else {
-		fmt.Println("Connection Succesfully..")
-	}
-	defer sc.Close()
+	// sc, err := sftp.NewClient(conn)
+	// if err != nil {
+	// 	fmt.Fprintf(os.Stderr, "Unable to start SFTP subsystem: %v\n", err)
+	// 	os.Exit(1)
+	// } else {
+	// 	fmt.Println("Connection Succesfully..")
+	// }
+	// defer sc.Close()
 
+	// return sc
 	// checkSftpFile(*sc, "/Home/ce_broker")
 	// SendEmail()
 
