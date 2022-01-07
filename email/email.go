@@ -1,6 +1,7 @@
 package email
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -9,9 +10,14 @@ import (
 
 func SendEmail() {
 
+	var smtpPort int
+
+	emailPort := os.Getenv("SMTP_PORT")
+	_, err := fmt.Sscan(emailPort, &smtpPort)
+
 	server := mail.NewSMTPClient()
 	server.Host = os.Getenv("SMTP_HOST")
-	server.Port = 587
+	server.Port = smtpPort
 	server.Username = os.Getenv("SMTP_USER")
 	server.Password = os.Getenv("SMTP_PASSWORD")
 	server.Encryption = mail.EncryptionTLS
