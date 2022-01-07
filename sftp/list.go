@@ -56,7 +56,7 @@ func CheckSftpFile(sc sftp.Client, remoteDir string) (err error) {
 	fileName = os.Getenv("FILE_NAME")
 	fileDate = os.Getenv("FILE_DATE")
 
-	currentTime := time.Now().Format("01/02/2006")
+	currentDate := time.Now().Format("01/02/2006")
 	for _, f := range files {
 		var modTime string
 
@@ -65,7 +65,7 @@ func CheckSftpFile(sc sftp.Client, remoteDir string) (err error) {
 		fileWhen := strings.ToLower(os.Getenv("FILE_WHEN"))
 
 		if fileWhen == "now" {
-			if f.Name() == fileName && modTime == currentTime {
+			if f.Name() == fileName && modTime == currentDate {
 				fmt.Printf("File %s found", f.Name())
 				fileState = true
 				break
