@@ -83,7 +83,6 @@ func CheckSftpFile(sc sftp.Client, remoteDir string) (err error) {
 
 	if fileState == false {
 		email.SendEmail()
-		fmt.Println("Test")
 	}
 
 	return
