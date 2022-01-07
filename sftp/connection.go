@@ -47,23 +47,5 @@ func Conn() *ssh.Client {
 		os.Exit(1)
 	}
 
-	// defer conn.Close()
-
 	return conn
-
-	// Create new SFTP client
-	// sc, err := sftp.NewClient(conn)
-	// if err != nil {
-	// 	fmt.Fprintf(os.Stderr, "Unable to start SFTP subsystem: %v\n", err)
-	// 	os.Exit(1)
-	// } else {
-	// 	fmt.Println("Connection Succesfully..")
-	// }
-	// defer sc.Close()
-
-	// return sc
-	// checkSftpFile(*sc, "/Home/ce_broker")
-	// SendEmail()
-
-	// listFiles(*sc, "/")
 }
